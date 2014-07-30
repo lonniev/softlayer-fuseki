@@ -37,10 +37,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #See http://docs.vagrantup.com/v2/vagrantfile/vagrant_settings.html
   config.vagrant.host = :detect
 
-  config.vm.define "sl-foo" do |cci|
+  config.vm.define "sl-fuseki" do |cci|
     #See http://docs.vagrantup.com/v2/vagrantfile/index.html
     cci.vm.box                        = "ju2wheels/SL_UBUNTU_LATEST_64_temp"
-    cci.vm.hostname                   = "sl-vagrant-cci"
+    cci.vm.hostname                   = "sl-fuseki"
     #cci.vm.boot_timeout               = 300
     #cci.vm.box_check_update           = false
     #cci.vm.box_download_checksum      = nil
@@ -61,7 +61,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #cci.ssh.insert_key                = true
     #cci.ssh.password                  = nil
     #cci.ssh.port                      = 22
-    #cci.ssh.private_key_path          = [ File.expand_path("~/.ssh/id_rsa") ]
+    cci.ssh.private_key_path          = [ File.expand_path("~/.vagrant.d/insecure_private_key") ]
     #cci.ssh.pty                       = false #Warning this setting is not recommended and can break things, recommended to create flex image with sudoers fixed for problematic distros
                                                #See https://github.com/audiolize/vagrant-softlayer/issues/11
     #cci.ssh.shell                     = "bash -l"
@@ -98,7 +98,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     cci.vm.provider :softlayer do |sl, cci_override|
       #Override the default setting only if using this provider
       cci_override.vm.box       = "ju2wheels/SL_UBUNTU_LATEST_64_temp"
-      #cci_override.ssh.username = "root"
+      cci_override.ssh.username = "root"
 
       #Note: If you use SL_GENERIC box you must set sl.image_guid or sl.operating_system/sl.dis_capacity, otherwise it is pre-set for you by the box
 
@@ -149,38 +149,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding
   # some recipes and/or roles.
-  #
-  # config.vm.provision "chef_solo" do |chef|
-  #   chef.cookbooks_path = "../my-recipes/cookbooks"
-  #   chef.roles_path = "../my-recipes/roles"
-  #   chef.data_bags_path = "../my-recipes/data_bags"
-  #   chef.add_recipe "mysql"
-  #   chef.add_role "web"
-  #
-  #   # You may also specify custom JSON attributes:
-  #   chef.json = { mysql_password: "foo" }
-  # end
+  config.omnibus.chef_version = :latest
 
-  # Enable provisioning with chef server, specifying the chef server URL,
-  # and the path to the validation key (relative to this Vagrantfile).
-  #
-  # The Opscode Platform uses HTTPS. Substitute your organization for
-  # ORGNAME in the URL and validation key.
-  #
-  # If you have your own Chef Server, use the appropriate URL, which may be
-  # HTTP instead of HTTPS depending on your configuration. Also change the
-  # validation key to validation.pem.
-  #
-  # config.vm.provision "chef_client" do |chef|
-  #   chef.chef_server_url = "https://api.opscode.com/organizations/ORGNAME"
-  #   chef.validation_key_path = "ORGNAME-validator.pem"
-  # end
-  #
-  # If you're using the Opscode platform, your validator client is
-  # ORGNAME-validator, replacing ORGNAME with your organization name.
-  #
-  # If you have your own Chef Server, the default validation client name is
-  # chef-validator, unless you changed the configuration.
-  #
-  #   chef.validation_client_name = "ORGNAME-validator"
+  config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = "./cookbooks"
+    chef.roles_path = "./roles"
+    chef.environments_path = "./environments"
+    chef.environment = "local-vagrant"
+    chef.add_recipe "fuseki"
+  end
 end

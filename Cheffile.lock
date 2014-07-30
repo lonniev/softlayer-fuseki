@@ -1,2 +1,19 @@
+SITE
+  remote: http://community.opscode.com/api/v1
+  specs:
+    apt (2.4.0)
+    java (1.24.0)
+
+GIT
+  remote: https://github.com/williamgreenly/chef-fuseki
+  path: cookbooks/fuseki
+  ref: master
+  sha: 2d9a367f58fcb4b4f1b8c4c2510785439a919680
+  specs:
+    fuseki (0.1.0)
+      java (>= 0.0.0)
+
 DEPENDENCIES
+  apt (>= 0)
+  fuseki (>= 0)
 
