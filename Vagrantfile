@@ -10,6 +10,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 3030, host: 3030, auto_correct: true
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -51,7 +52,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #cci.vm.box_version                = ">=0"
     #cci.vm.graceful_halt_timeout      = 300
     #cci.vm.guest                      = :linux
-    #cci.vm.usable_port_range          = 2200..2250
+    cci.vm.usable_port_range          = 2200..3050
 
     #See http://docs.vagrantup.com/v2/vagrantfile/ssh_settings.html
     cci.ssh.forward_agent             = true
@@ -67,20 +68,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #cci.ssh.shell                     = "bash -l"
     #cci.ssh.username                  = "vagrant"
 
-    #Windows specific config options for vagrant-windows plugin
-    #cci.windows.halt_check_interval   = 1 if Vagrant.has_plugin?("vagrant-windows")
-    #cci.windows.halt_timeout          = 30 if Vagrant.has_plugin?("vagrant-windows")
-    cci.windows.set_work_network      = true if Vagrant.has_plugin?("vagrant-windows")
-    #cci.winrm.guest_port              = 5985 if Vagrant.has_plugin?("vagrant-windows")
-    #cci.winrm.host                    = "localhost" if Vagrant.has_plugin?("vagrant-windows")
-    #cci.winrm.max_tries               = 20 if Vagrant.has_plugin?("vagrant-windows")
-    #cci.winrm.password                = "vagrant" if Vagrant.has_plugin?("vagrant-windows")
-    #cci.winrm.port                    = 5985 if Vagrant.has_plugin?("vagrant-windows")
-    #cci.winrm.timeout                 = 1800 if Vagrant.has_plugin?("vagrant-windows")
-    cci.winrm.username                = "vagrant" if Vagrant.has_plugin?("vagrant-windows")
-
     #See http://docs.vagrantup.com/v2/networking/index.html
     #cci.vm.network :forwarded_port, guest: 22, guest_ip: nil, host:2222, host_ip: nil, protocol: "tcp", auto_correct: true
+    cci.vm.network :forwarded_port, guest: 3030, guest_ip: nil, host: 3030, host_ip: nil, protocol: "tcp", auto_correct: true
 
     #Always put the private network before the public so it matches SoftLayer (when using VirtualBox or other hypervisor), eth0 is private and eth1 public, they are created in order provided
     #cci.vm.network :private_network, type: "dhcp", ip: nil, auto_config: true, virtualbox__intnet: true
@@ -133,17 +123,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         #service.weight = 2
       #end
     end if Vagrant.has_plugin?("SoftLayer")
-
-    #cci.vm.provision :file do |fileupload|
-    #  fileupload.source      = "/tmp/local_example.txt"
-    #  fileupload.destination = "/tmp/uploaded_vm_example.txt"
-    #end
-
-    #cci.vm.provision :shell do |shellscript|
-      #Use the id to override it somewhere else, and preserve_order ensures it gets executed at the point
-      #where it was originally defined instead of where it was overriden.
-    #  shellscript.inline = "/bin/echo -n 'hello_world' > /dev/null", id: "helloworld", preserve_order: true
-    #end
   end
 
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
