@@ -40,7 +40,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define "sl-fuseki" do |cci|
     #See http://docs.vagrantup.com/v2/vagrantfile/index.html
-    cci.vm.box                        = "ju2wheels/SL_UBUNTU_LATEST_64_temp"
+    cci.vm.box                        = "ju2wheels/SL_UBUNTU_LATEST_64"
     cci.vm.hostname                   = "sl-fuseki"
     #cci.vm.boot_timeout               = 300
     #cci.vm.box_check_update           = false
@@ -87,7 +87,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     cci.vm.provider :softlayer do |sl, cci_override|
       #Override the default setting only if using this provider
-      cci_override.vm.box       = "ju2wheels/SL_UBUNTU_LATEST_64_temp"
+      cci_override.vm.box       = "ju2wheels/SL_UBUNTU_LATEST_64"
       cci_override.ssh.username = "root"
 
       #Note: If you use SL_GENERIC box you must set sl.image_guid or sl.operating_system/sl.dis_capacity, otherwise it is pre-set for you by the box
@@ -102,7 +102,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       sl.hostname                  = cci.vm.hostname
       #sl.hourly_billing            = true
       #sl.image_guid                = "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE" #Dont use this with sl.operating_system/sl.disk_capacity, they are mutually exclusive
-      sl.local_disk                = false
+      sl.local_disk                = true
       #sl.manage_dns                = false
       #sl.max_memory                = 1024
       #sl.network_speed             = 10
